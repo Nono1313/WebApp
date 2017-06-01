@@ -1,12 +1,13 @@
 <?php
 
+require_once('../model/InterfaceModelo.php');
 /**
 * Clase de usuarios
 */
-class UsuariosController
+class UserController
 {
 	
-	function __construct(argument)
+	function __construct()
 	{
 		# carga de archivo
 	}
@@ -14,8 +15,15 @@ class UsuariosController
 	function createUser(){
 
 	}
-	function readUser(){
-
+	function readUser($nombre=''){		
+		if ($nombre == '') {
+			echo('Listo Todos');
+			$interface = new InterfaceModelo();
+			$interface->getUsuario($nombre);
+		}
+		else{
+			echo('hola: '.$nombre);
+		}
 	}
 	function updateUser(){
 

@@ -1,12 +1,14 @@
 <?php
 
+require_once('UserController.php');
+
 /**
 * Clase de Controlador Principal
 */
 class AppController
 {
 	
-	function __construct(argument)
+	function __construct()
 	{
 		# carga de archivo
 	}
@@ -21,6 +23,9 @@ class AppController
 
 	}
 	function IndexRole3(){
+
+	}
+	function Logout(){
 
 	}
 }
