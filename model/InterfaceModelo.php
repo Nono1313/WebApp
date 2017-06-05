@@ -9,43 +9,98 @@ class InterfaceModelo
 {
 	private $Usuarios;
 
+	function __construct()
+	{
+		$this->cargaUsuarios();
+	}
+
 	public function getUsuario($nombre='')
 	{
 		$usuario = null;
 		//si no especifica asumo que pide a todos
 		if($nombre == ''){
-			$usuario =  $this->getUsuarios();
-			$this->setDefault();
+			$usuario =  $this->Usuarios;
 		}
 		else{
 			$usuario = $this->findByNombre($nombre);
 		}
-		
-		//Buscarlo aqui
-
 		return $usuario;
 	}
-
+	public function creaUsuario($user)
+	{
+		if ($this->findByNombre($user->getNombre()) != null ) {
+			trigger_error('Error Usuario Ya agregado');
+		}
+		else{
+			array_push($this->Usuarios, $user);
+			$this->guardaUsuarios();
+		}
+	}
+	public function deleteUsuario($userDelete)
+	{
+		$Posicion = -1;
+		foreach ($this->Usuarios as $key => $user) {
+			if($userDelete == $user->getNombre()){
+				$Posicion = $key;
+			}
+		}
+		if($Posicion == -1){
+			trigger_error('No se puede eliminar el usuario');
+			return;
+		}
+		else{
+			unset($this->Usuarios[$Posicion]);
+			$this->guardaUsuarios();
+		}
+		
+	}
 	private function cargaUsuarios()
 	{
-		# code...
+		global $path;
+		$fp = fopen($path, "r"); 
+
+		if(!$fp){
+			trigger_error("No se puedo cargar el archivo");
+		    return;
+		}
+		$users = base64_decode( fread($fp, filesize($path) ) ); 
+
+		$this->Usuarios = unserialize( $users );
+		fclose($fp);
+		return;
 	}
 	private function guardaUsuarios()
 	{
-		# code...
-	}
+		global $path;
+		$objData = base64_encode( serialize( $this->Usuarios ) );
 
-	private function getUsuarios()
-	{
-		//Los leo en archivo o de algun lado
+		if (is_writable($path)) {
+		    $fp = fopen($path, "wb"); 
+		    fwrite($fp, $objData); 
+		    fclose($fp);
+		}
+		else{
+			trigger_error('403: Error No Se puede Generar Archivo');
+		}
+		return;
 	}
-
 	private function findByNombre($nombre)
 	{
-		//Los leo en archivo o de algun lado
+		if($nombre == ''){
+			return $this->Usuarios;
+		}
+		else{
+			foreach ($this->Usuarios as $user) {
+				if($user->getNombre() == $nombre){
+					return $user;
+				}
+			}
+		}
+		return null;
 	}
 	private function setDefault()
 	{
+		global $path;
 		$role1 = new Roles(1,'PAGE_1');
 		$role2 = new Roles(2,'PAGE_2');
 		$role3 = new Roles(3,'PAGE_3');
@@ -59,17 +114,7 @@ class InterfaceModelo
 
 		$this->Usuarios = array($user1, $user2, $user3, $user4, $user5);
 
-		$objData = serialize( $this->Usuarios );
-
-		if (is_writable('/home/nono/www/WebApp/model/usuarios.class')) {
-		    $fp = fopen('/home/nono/www/WebApp/model/usuarios.class', "w"); 
-		    fwrite($fp, $objData); 
-		    fclose($fp);
-		}
-		else{
-			echo '<h2>Error No Se puede Generar Archivo</h2>';
-		}
-
+		$this->guardaUsuarios();
 	}
 
 }

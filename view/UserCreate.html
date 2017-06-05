@@ -4,6 +4,22 @@
 	<title>Crear Usuario</title>
 </head>
 <body>
-
+	<div id="main">
+		<h1>Crea Usuario</h1>
+		<div id="login">
+			<h2>Usuario</h2>
+			<form action="register" method="post">
+				<label>Nombre de usuario :</label>
+				<input id="nombre" name="nombre" placeholder="Nombre de usuario" type="text" value="<?php echo $user->getNombre() ?>">
+				<label>Password :</label>
+				<input id="password" name="password" placeholder="**********" type="password" value="<?php echo $user->getContresenna() ?>">
+				<label>
+					<input type="checkbox" id="rol1" name="rol1" <?php if($user->revisaRol('PAGE_1')) echo "checked='checked'"; ?> > PAGE_1</label>
+				<label><input type="checkbox" id="rol2" name="rol2" <?php if($user->revisaRol('PAGE_2')) echo "checked='checked'"; ?>> PAGE_2</label>
+				<label><input type="checkbox" id="rol3" name="rol3" <?php if($user->revisaRol('PAGE_3')) echo "checked='checked'"; ?>> PAGE_3</label>
+				<input name="submit" type="submit" value="registrar">
+			</form>
+		</div>
+	</div>
 </body>
 </html>

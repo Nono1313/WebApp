@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Login</title>
-</head>
-<body>
-
-</body>
+	<head>
+		<title>Login</title>
+	</head>
+	<body>
+		<div id="main">
+			<h1>Ingrese Nombre de usuario  y contraseña</h1>
+			<div id="login">
+				<h2>Login</h2>
+				<form action="loginCheck" method="post">
+					<label>Nombre de usuario :</label>
+					<input id="nombre" name="nombre" placeholder="Nombre de usuario" type="text">
+					<label>Password :</label>
+					<input id="password" name="password" placeholder="**********" type="password">
+					<input name="submit" type="submit" value="Ingresar">
+				</form>
+			</div>
+		</div>
+	</body>
 </html>

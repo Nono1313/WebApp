@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lista Usuarios</title>
+</head>
+<body>
+<div class="main">
+	<section>
+		<table>
+			<tr>
+				<th>Nombre de Usuario</th>
+				<th>Roles</th>
+				<?php if($editable) echo "<th>Ver</th><th>Editar</th><th>Eliminar</th>"; ?>
+			</tr>
+			<?php
+				foreach ($usuarios as $user) {
+					$respuesta = "<tr><td>";
+					$respuesta .=$user->getNombre();
+					$respuesta .= "</td><td>";
+					foreach ($user->getRoles() as $rol){
+						$respuesta .= $rol->getPagPermitida()."<br>";
+					}
+					$respuesta .= "</td>";
+					$respuesta .= "<td><a href=\"users/view/".$user->getNombre(). "\">Ver</a></td>";
+					if($_SESSION['login_user'] == 'ADMIN'){
+						$respuesta .= "<td><a href=\"users/update/".$user->getNombre(). "\">Editar</a></td>";
+						$respuesta .= "<td><a href=\"users/delete/".$user->getNombre(). "\">Eliminar</a></td>";
+					}
+					echo $respuesta."</tr>";
+				}
+			?>
+		</table>
+	</section>
+</div>
+</body>
+</html>

@@ -1,16 +1,41 @@
 <?php
+
+session_start();
+ 
+// Check if the timeout field exists.
+if(isset($_SESSION['timeout'])) {
+    // See if the number of seconds since the last
+    // visit is larger than the timeout period.
+    $duration = time() - (int)$_SESSION['timeout'];
+    if($duration > $timeout) {
+        // Destroy the session and restart it.
+        session_destroy();
+        session_start();
+    }
+}
+ 
+// Update the timout field with the current time.
+$_SESSION['timeout'] = time();
+
+$error = '';
+
+function customError($errno, $errstr) {
+  echo "[$errno] $errstr";
+}
+set_error_handler("customError");
+
 require_once('../controller/AppController.php');
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     //Routing Usuarios
-    	//read
-    	$r->addRoute('GET', '/users[/{nombre}]', 'UserController/readUser');
     	//Insert
-    	$r->addRoute(['GET', 'POST'], '/users/register/{nombre:\.+}/{password:\.+}', 'UserController/createUser');
+    	$r->addRoute(['GET', 'POST'], '/users/register[/{nombre:\.+}/{password:\.+}]', 'UserController/createUser');
     	//Update
-    	$r->addRoute(['GET', 'POST'], '/users/update/{id:\.+}/{nombre:\.+}/{password:\.+}', 'UserController/createUser');
+    	$r->addRoute(['GET', 'POST'], '/users/update/{nombre}', 'UserController/updateUser');
     	//delete
-    	$r->addRoute(['POST'], '/users/delete/{id:\.+}', 'UserController/deleteUser');
+    	$r->addRoute(['GET'], '/users/delete/{nombre}', 'UserController/deleteUser');
+    	//read
+    	$r->addRoute('GET', '/users[/view/{nombre}]', 'UserController/readUser');	
     //page 1
     	$r->addRoute('GET', '/PAGE_1', 'AppController/IndexRole1');
     //page 2
@@ -19,6 +44,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     	$r->addRoute('GET', '/PAGE_3', 'AppController/IndexRole3');
     // iniciar sesion
     $r->addRoute('GET', '/login', 'AppController/Login');
+    $r->addRoute('POST', '/loginCheck', 'AppController/LoginCheck');
+
 
     // Salida
     $r->addRoute('GET', '/logout', 'AppController/Logout');

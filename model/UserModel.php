@@ -45,4 +45,12 @@ class Usuario {
 	{
 		$this->roles = $value;
 	}
+	public function revisaRol($rolRev){
+		foreach ($this->roles as $rol) {
+			if ($rol->getPagPermitida() == $rolRev) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
